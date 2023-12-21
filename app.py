@@ -2,7 +2,7 @@ from flask import Flask, url_for, request, redirect, abort, jsonify,render_templ
 import mysql.connector
 import json
 
-app = Flask(__name__, static_url_path='', static_folder='staticpages')
+app = Flask(__name__, static_url_path='', static_folder='static')
 
 class ShopDAO:
     def __init__(self, config_path='config.json'):
@@ -137,9 +137,9 @@ def delete(id):
     return jsonify({"done":True})
 
 # Route to render the product list page
-@app.route('/list')
+@app.route('/shop')
 def product_list():
-    return render_template('index.html')
+    return render_template('shop.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

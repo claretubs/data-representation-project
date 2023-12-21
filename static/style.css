@@ -3,16 +3,19 @@ body {
     margin: 20px;
 }
 
-#productList {
-    max-width: 600px;
-    margin: 0 auto;
+h1, h2 {
+    color: #333;
 }
 
-#productItems {
-    list-style: none;
-    padding: 0;
+form {
+    margin-bottom: 20px;
 }
 
-li {
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input, button {
     margin-bottom: 10px;
 }
