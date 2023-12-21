@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <link rel="stylesheet" href="../static/style.css"> 
+</head>
+<body>
+
+<div id="productList">
+    <h1>Product List</h1>
+    <ul id="productItems"></ul>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> <!-- Include jQuery -->
+
+<script>
+    // Function to fetch and display product list
+    function fetchProductList() {
+        $.ajax({
+            type: "GET",
+            url: "/shoes",
+            success: function (data) {
+                displayProductList(data.shoes);
+            },
+            error: function (error) {
+                console.error("Error fetching product list:", error);
+            }
+        });
+    }
+
+    // Function to display product list on the page
+    function displayProductList(products) {
+        var productList = $("#productItems");
+        productList.empty(); // Clear existing items
+
+        $.each(products, function (index, product) {
+            var listItem = $("<li>").text(product.Product + " - €" + product.Price);
+            productList.append(listItem);
+        });
+    }
+
+    // Fetch and display product list on page load
+    $(document).ready(function () {
+        fetchProductList();
+    });
+</script>
+
+</body>
+</html>

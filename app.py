@@ -51,7 +51,7 @@ def getAll():
     shop_dao.close_all(mycursor, connection)
 
     # Create a list of dictionaries for each shoe
-    shoes_list = [{'id': shoe[0], 'title': shoe[1], 'description': shoe[2], 'done': shoe[3]} for shoe in shoes]
+    shoes_list = [{'id': shoe[0], 'Product': shoe[1], 'Model': shoe[2], 'Price': shoe[3]} for shoe in shoes]
     return jsonify({'shoes': shoes_list})
 
 # Find by Id
@@ -135,6 +135,11 @@ def delete(id):
     
     shop_dao.close_all(mycursor, connection)
     return jsonify({"done":True})
+
+# Route to render the product list page
+@app.route('/list')
+def product_list():
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
