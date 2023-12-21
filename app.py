@@ -1,8 +1,9 @@
-from flask import Flask, url_for, request, redirect, abort, jsonify,render_template
+from flask import Flask, url_for, request, redirect, abort, jsonify,render_template, flash, session
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 import mysql.connector
 import json
 
-app = Flask(__name__, static_url_path='', static_folder='static')
+app = Flask(__name__, static_url_path='', static_folder='static', template_folder='templates')
 
 class ShopDAO:
     def __init__(self, config_path='config.json'):
@@ -135,6 +136,52 @@ def delete(id):
     
     shop_dao.close_all(mycursor, connection)
     return jsonify({"done":True})
+
+
+app.config['SECRET_KEY'] = 'your_secret_key'
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+
+class User(UserMixin):
+    def __init__(self, user_id):
+        self.id = user_id
+
+# Hard-coded user for demonstration purposes
+users = {'1': {'username': 'admin', 'password': 'password'}}
+
+@app.route('/')
+def home():
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        return "Hello!  <a href='/logout'>Logout</a>"
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User(user_id)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = users.get('1')  # Hard-coded user for demonstration purposes
+
+        if user and user['password'] == password:
+            user_obj = User('1')
+            login_user(user_obj)
+            flash('Login successful!', 'success')
+            return redirect(url_for('product_list'))
+        else:
+            flash('Invalid username or password', 'error')
+
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 # Route to render the product list page
 @app.route('/shop')
