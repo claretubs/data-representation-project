@@ -55,6 +55,9 @@
             <button type="submit">Delete Product</button>
         </form>
 
+        <!-- Logout button/link -->
+        <a href="{{ url_for('logout') }}">Logout</a>
+
         <script src="{{ url_for('static', filename='app.js') }}"></script>
 
     {% else %}
