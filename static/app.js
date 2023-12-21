@@ -1,20 +1,19 @@
-document.addEventListener('DOMContentLoaded', function () {
-    // Function to fetch and display products
-    function fetchProducts() {
-        fetch('/shoes')
-            .then(response => response.json())
-            .then(data => {
-                const productList = document.getElementById('product-list');
-                productList.innerHTML = '<h2>Products</h2>';
-                data.shoes.forEach(product => {
-                    productList.innerHTML += `
-                        <p>ID: ${product.id}, Name: ${product.Product}, Model: ${product.Model}, Price: ${product.Price}</p>
-                    `;
-                });
-            })
-            .catch(error => console.error('Error fetching products:', error));
-    }
+function fetchProducts() {
+    fetch('/shoes')
+        .then(response => response.json())
+        .then(data => {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = '<h2>Products</h2>';
+            data.shoes.forEach(product => {
+                productList.innerHTML += `
+                    <p>ID: ${product.id}, Name: ${product.Product}, Model: ${product.Model}, Price: ${product.Price}</p>
+                `;
+            });
+        })
+        .catch(error => console.error('Error fetching products:', error));
+}
 
+document.addEventListener('DOMContentLoaded', function () {
     // Fetch and display products on page load
     fetchProducts();
 
