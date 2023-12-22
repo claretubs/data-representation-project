@@ -30,6 +30,8 @@ class ShopDAO:
 
 shop_dao = ShopDAO()
 mycursor, connection = shop_dao.get_cursor()
+
+# First database table 'productdata'
 sql= '''
     CREATE TABLE IF NOT EXISTS productdata (
         ID INT AUTO_INCREMENT PRIMARY KEY,
@@ -39,6 +41,19 @@ sql= '''
     )
 '''
 mycursor.execute(sql)
+
+# Second database table 'orderdata'
+order_sql = '''
+    CREATE TABLE IF NOT EXISTS orderdata (
+        OrderID INT AUTO_INCREMENT PRIMARY KEY,
+        ProductID INT,
+        Quantity INT,
+        TotalPrice INT,
+        FOREIGN KEY (ProductID) REFERENCES productdata(ID)
+    )
+'''
+# Execute the SQL statement
+mycursor.execute(order_sql)
 connection.commit()
 shop_dao.close_all(mycursor, connection)
 
