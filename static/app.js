@@ -1,3 +1,6 @@
+// Global Variable to store products
+let products = [];
+
 function fetchProducts() {
     fetch('/shoes')
         .then(response => response.json())
@@ -6,7 +9,11 @@ function fetchProducts() {
             productList.innerHTML = '<h2>Products</h2>';
             data.shoes.forEach(product => {
                 productList.innerHTML += `
+                <div class="product-item">
                     <p>ID: ${product.id}, Name: ${product.Product}, Model: ${product.Model}, Price: ${product.Price}</p>
+                    <button class="order-btn" data-id="${product.id}">Order</button>
+                    <input type="number" class="quantity-input" id="quantity_${product.id}" placeholder="Quantity" min="1">
+                </div>
                 `;
             });
         })
@@ -88,4 +95,28 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => console.error('Error deleting product:', error));
     });
+
+    // Add event listener for order buttons
+    document.getElementById('product-list').addEventListener('click', function (event) {
+        const orderButton = event.target.closest('.order-btn');
+        if (event.target.classList.contains('order-btn')) {
+        // Get product details
+        const productId = event.target.getAttribute('data-id');
+        const productName = products.find(product => product.id === parseInt(productId)).Product;
+        const productPrice = products.find(product => product.id === parseInt(productId)).Price;
+
+        // Get quantity input value
+        const quantityInput = document.getElementById(`quantity_${productId}`);
+        const quantity = quantityInput.value ? parseInt(quantityInput.value) : 1;
+
+        // Calculate total price
+        const totalPrice = productPrice * quantity;
+
+        // Display total price
+        alert(`Product: ${productName}\nQuantity: ${quantity}\nTotal Price: $${totalPrice}`);
+
+        // Send order request to server
+        sendOrderRequest(productId, productName, quantity, totalPrice);
+    }
+  });
 });

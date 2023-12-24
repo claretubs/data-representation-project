@@ -11,7 +11,15 @@
 
     {% if current_user.is_authenticated %}
         <!-- Display Products -->
-        <div id="product-list"></div>
+        <div id="product-list">
+            {% for product in products %}
+            <div class="product-item">
+                <p>{{ product.Product }} - ${{ product.Price }}</p>
+                <button class="order-btn" data-id="{{ product.id }}">Order</button>
+                <input type="number" class="quantity-input" id="quantity_{{ product.id }}" placeholder="Quantity" min="1">
+            </div>
+        {% endfor %}
+        </div>
 
         <!-- Add Product Form -->
         <h2>Add Product</h2>

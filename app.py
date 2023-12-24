@@ -28,6 +28,22 @@ class ShopDAO:
         connection.close()
         mycursor.close()
 
+    def create_order(self, product_id, quantity, total_price):
+        mycursor, connection = self.get_cursor()
+
+        # Insert a new order into the 'orderdata' table
+        order_sql = '''
+            INSERT INTO orderdata (ProductID, Quantity, TotalPrice) 
+            VALUES (%s, %s, %s)
+        '''
+        values = (product_id, quantity, total_price)
+
+        mycursor.execute(order_sql, values)
+        connection.commit()
+
+        # Close the cursor and connection
+        self.close_all(mycursor, connection)
+
 shop_dao = ShopDAO()
 mycursor, connection = shop_dao.get_cursor()
 
@@ -111,6 +127,8 @@ def create():
 @app.route('/shoes/<int:id>', methods=['PUT'])
 def update(id):
     mycursor, connection = shop_dao.get_cursor()
+
+    # Check if the product with the given ID exists
     mycursor.execute(f'SELECT * FROM productdata WHERE id = {id}')
     current_shoe = list(mycursor.fetchone())
 
@@ -152,6 +170,32 @@ def delete(id):
     shop_dao.close_all(mycursor, connection)
     return jsonify({"done":True})
 
+# New route for creating an order
+@app.route('/orders', methods=['POST'])
+@login_required
+def create_order():
+    data = request.json
+
+    # Retrieve order details
+    product_id = data.get('productId')
+    product_name = data.get('productName')
+    quantity = data.get('quantity')
+    total_price = data.get('totalPrice')
+
+    # Add order to the orderdata database
+    order_data = shop_dao.create_order(product_id, product_name, quantity, total_price)
+
+    return jsonify({'order': order_data}), 201
+
+def get_products():
+    mycursor, connection = shop_dao.get_cursor()
+    mycursor.execute('SELECT * FROM productdata')
+    products = mycursor.fetchall()
+    shop_dao.close_all(mycursor, connection)
+
+    # Create a list of dictionaries for each product
+    products_list = [{'id': product[0], 'Product': product[1], 'Model': product[2], 'Price': product[3]} for product in products]
+    return products_list
 
 app.config['SECRET_KEY'] = 'your_secret_key'
 login_manager = LoginManager(app)
@@ -201,7 +245,8 @@ def logout():
 # Route to render the product list page
 @app.route('/shop')
 def product_list():
-    return render_template('shop.html')
+    products = get_products()
+    return render_template('shop.html', products=products)
 
 if __name__ == '__main__':
     app.run(debug=True)
