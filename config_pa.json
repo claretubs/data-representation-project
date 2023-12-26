@@ -1,0 +1,8 @@
+{
+    "Database": {
+        "host": "claretubs.mysql.pythonanywhere-services.com",
+        "user": "claretubs",
+        "password": "datareppass",
+        "database": "claretubs$shopdata"
+    }
+}
