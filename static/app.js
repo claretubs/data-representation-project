@@ -115,10 +115,33 @@ document.addEventListener('DOMContentLoaded', function () {
         const totalPrice = productPrice * quantity;
 
         // Display total price
-        alert(`Product: ${productName}\nQuantity: ${quantity}\nTotal Price: $${totalPrice}`);
+        alert(`Product: ${productName}\nQuantity: ${quantity}\nTotal Price: €${totalPrice}`);
 
         // Send order request to server
-        // sendOrderRequest(productId, productName, quantity, totalPrice);
+        sendOrderRequest(productId, quantity, totalPrice);
     }
   });
 });
+// Function to send order request
+function sendOrderRequest(productId, quantity, totalPrice) {
+    // Prepare order data
+    const orderData = {
+        productId: productId,
+        quantity: quantity,
+        totalPrice: totalPrice
+    };
+
+    // Send order request to the server
+    fetch('/orders', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Order Placed:', data.order);
+        })
+        .catch(error => console.error('Error placing order:', error));
+}

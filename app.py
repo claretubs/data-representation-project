@@ -183,7 +183,7 @@ def create_order():
     total_price = data.get('totalPrice')
 
     # Add order to the orderdata database
-    order_data = shop_dao.create_order(product_id, product_name, quantity, total_price)
+    order_data = shop_dao.create_order(product_id, quantity, total_price)
 
     return jsonify({'order': order_data}), 201
 
