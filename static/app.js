@@ -1,26 +1,28 @@
-// Global Variable to store products
-let products = [];
-
-function fetchProducts() {
-    fetch('/shoes')
-        .then(response => response.json())
-        .then(data => {
-            const productList = document.getElementById('product-list');
-            productList.innerHTML = '<h2>Products</h2>';
-            data.shoes.forEach(product => {
-                productList.innerHTML += `
-                <div class="product-item">
-                    <p>ID: ${product.id}, Name: ${product.Product}, Model: ${product.Model}, Price: ${product.Price}</p>
-                    <button class="order-btn" data-id="${product.id}">Order</button>
-                    <input type="number" class="quantity-input" id="quantity_${product.id}" placeholder="Quantity" min="1">
-                </div>
-                `;
-            });
-        })
-        .catch(error => console.error('Error fetching products:', error));
-}
-
 document.addEventListener('DOMContentLoaded', function () {
+    // Global Variable to store products
+    let products = [];
+
+    // Fetch and display products on page load
+    function fetchProducts() {
+        fetch('/shoes')
+            .then(response => response.json())
+            .then(data => {
+                products = data.shoes;  // Store the fetched products in the global variable
+                const productList = document.getElementById('product-list');
+                productList.innerHTML = '<h2>Products</h2>';
+                data.shoes.forEach(product => {
+                    productList.innerHTML += `
+                    <div class="product-item">
+                        <p>ID: ${product.id}, Name: ${product.Product}, Model: ${product.Model}, Price: ${product.Price}</p>
+                        <button class="order-btn" data-id="${product.id}">Order</button>
+                        <input type="number" class="quantity-input" id="quantity_${product.id}" placeholder="Quantity" min="1">
+                    </div>
+                    `;
+                });
+            })
+            .catch(error => console.error('Error fetching products:', error));
+    }
+
     // Fetch and display products on page load
     fetchProducts();
 
@@ -98,12 +100,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Add event listener for order buttons
     document.getElementById('product-list').addEventListener('click', function (event) {
-        const orderButton = event.target.closest('.order-btn');
         if (event.target.classList.contains('order-btn')) {
-        // Get product details
+        // Get product details using the stored product data
         const productId = event.target.getAttribute('data-id');
-        const productName = products.find(product => product.id === parseInt(productId)).Product;
-        const productPrice = products.find(product => product.id === parseInt(productId)).Price;
+        const product = products.find(product => product.id === parseInt(productId));
+        const productName = product.Product;
+        const productPrice = product.Price;
 
         // Get quantity input value
         const quantityInput = document.getElementById(`quantity_${productId}`);
@@ -116,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
         alert(`Product: ${productName}\nQuantity: ${quantity}\nTotal Price: $${totalPrice}`);
 
         // Send order request to server
-        sendOrderRequest(productId, productName, quantity, totalPrice);
+        // sendOrderRequest(productId, productName, quantity, totalPrice);
     }
   });
 });
