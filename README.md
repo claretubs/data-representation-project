@@ -21,7 +21,7 @@ The Flask E-commerce Application is a web-based platform designed for online ret
 6. Download packages and libraries from *requiremnts.txt*.
 7. Open terminal and run <code>python app.py</code>
 8. Open http://127.0.0.1:5000 in web browser.
-9. Hosted online at https://claretubs.pythonanywhere.com 
+9. Hosted online at https://claretubs.pythonanywhere.com - the username is *admin* and the password is *password*.
 
 ## **Technical Information**
 ### ***Language:***
